@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CarePilot – Your Smart Healthcare Assistant</title>
+<style>
+:root{--bg:#f6faf9;--surface:#fff;--text:#12302c;--muted:#58716d;--brand:#0f9d8a;--brand-d:#0b7a6b;--accent:#e8f6f3;--border:#d8e7e4;--warn:#fff4e0;--warn-t:#8a5a00;--user:#0f9d8a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1816;--surface:#13242196;--text:#e6f2ef;--muted:#9bb5b0;--brand:#2dd4bf;--brand-d:#5eead4;--accent:#14302b;--border:#234440;--warn:#3a2c0e;--warn-t:#fbd38d;--user:#0f9d8a}}
+:root[data-theme="dark"]{--bg:#0c1816;--surface:#132421;--text:#e6f2ef;--muted:#9bb5b0;--brand:#2dd4bf;--brand-d:#5eead4;--accent:#14302b;--border:#234440;--warn:#3a2c0e;--warn-t:#fbd38d;--user:#0f9d8a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font-weight:800;font-size:1.25rem;display:flex;gap:8px;align-items:center}
+.logo span{background:var(--brand);color:#fff;border-radius:10px;width:32px;height:32px;display:grid;place-items:center}
+nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:.95rem}
+nav a:hover{color:var(--brand)}
+.btn{display:inline-block;background:var(--brand);color:#fff;padding:12px 22px;border-radius:12px;text-decoration:none;font-weight:600;border:0;cursor:pointer;font-size:1rem}
+.btn:hover{background:var(--brand-d)}
+.btn.alt{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:48px 0 32px;position:relative}
+.hero::before{content:"";position:absolute;inset:-70px -40px auto -40px;height:560px;background:radial-gradient(520px 300px at 15% 25%,color-mix(in srgb,var(--brand) 25%,transparent),transparent 70%),radial-gradient(460px 300px at 92% 30%,color-mix(in srgb,#6366f1 22%,transparent),transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--brand-d);border:1px solid var(--border);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;margin-bottom:18px}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--brand);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--brand) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3.6rem);line-height:1.08;margin:0 0 18px;letter-spacing:-.03em}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--brand),#6366f1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:520px;margin:0 0 28px;color:var(--muted);font-size:1.12rem}
+.hero .btns{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn{box-shadow:0 10px 24px -10px var(--brand)}
+.trust{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;color:var(--muted);font-size:.88rem}
+.vis{position:relative;min-height:400px;display:grid;place-items:center}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:26px;padding:22px;width:min(100%,330px);box-shadow:0 30px 60px -25px color-mix(in srgb,var(--brand) 60%,transparent)}
+.panel small{color:var(--muted)}
+.bpm{font-size:2.4rem;font-weight:800;line-height:1.1}.bpm span{font-size:1rem;color:var(--muted);font-weight:500}
+.ecg{width:100%;height:70px;margin:8px 0 14px}
+.ecg path{fill:none;stroke:var(--brand);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:420;animation:dash 3s linear infinite}
+@keyframes dash{from{stroke-dashoffset:420}to{stroke-dashoffset:-420}}
+.bub{background:var(--accent);border-radius:14px;padding:10px 12px;font-size:.88rem}
+.float{position:absolute;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:10px 14px;font-size:.85rem;font-weight:600;box-shadow:0 14px 30px -14px rgba(0,0,0,.35);animation:fl 5s ease-in-out infinite}
+.f1{top:20px;right:-6px}.f2{top:150px;left:-14px;animation-delay:1.5s}
+.doc{width:min(100%,340px);display:block;margin:0 auto}
+.pn{position:absolute;left:-8px;bottom:6px;width:230px;padding:14px 16px;border-radius:20px}
+.pn .bpm{font-size:1.7rem}.pn .ecg{height:46px;margin:4px 0 8px}.pn .bub{font-size:.78rem;padding:8px 10px}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media(max-width:820px){.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero .btns,.trust{justify-content:center}.f1{left:0}.f2{right:0}}
+@media(prefers-reduced-motion:reduce){.hero *{animation:none!important}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:36px 0}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center}
+.stat b{display:block;font-size:1.6rem;color:var(--brand)}
+.stat small{color:var(--muted)}
+section{padding:44px 0}
+h2{font-size:1.8rem;margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px}
+.card .ic{font-size:1.6rem;background:var(--accent);width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:1.05rem}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+.demo{display:grid;grid-template-columns:1fr;gap:20px}
+.chat{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;max-width:640px;margin:0 auto;width:100%}
+.chat-h{background:var(--brand);color:#fff;padding:14px 18px;font-weight:600}
+.msgs{padding:16px;height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.m{max-width:85%;padding:10px 14px;border-radius:16px;font-size:.95rem}
+.m.bot{background:var(--accent);align-self:flex-start;border-bottom-left-radius:4px}
+.m.me{background:var(--user);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 12px}
+.chip{background:var(--accent);color:var(--brand-d);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:.85rem;cursor:pointer}
+.chip:hover{border-color:var(--brand)}
+.inp{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+.inp input{flex:1;min-width:0;padding:11px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:1rem}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.step{position:relative;padding:22px 22px 22px 22px;background:var(--surface);border:1px solid var(--border);border-radius:16px}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;margin-bottom:10px}
+.step h3{margin:0 0 4px;font-size:1.05rem}.step p{margin:0;color:var(--muted);font-size:.95rem}
+.notice{background:var(--warn);color:var(--warn-t);border-radius:14px;padding:16px 18px;font-size:.92rem}
+.cta{background:var(--brand);color:#fff;border-radius:24px;text-align:center;padding:44px 20px}
+.cta h2{color:#fff}.cta p{opacity:.9;margin:0 0 20px}
+.cta .btn{background:#fff;color:#0b7a6b}
+footer{padding:30px 0;color:var(--muted);font-size:.88rem;text-align:center}
+.book{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;align-items:start}
+.book label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:12px}
+.book select,.book input,.book textarea{width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lbl{font-size:.85rem;color:var(--muted);margin-bottom:8px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px;margin-bottom:16px}
+.slot{padding:9px 6px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font:inherit;font-size:.88rem}
+.slot:hover:not(:disabled){border-color:var(--brand)}
+.slot.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.slot:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+#sum{position:sticky;top:16px;background:var(--accent)}
+#sum h3{margin:0 0 12px}
+.ln{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border);font-size:.92rem}
+.ln span{color:var(--muted)}.ln b{text-align:right}
+#sum .note{font-size:.82rem;color:var(--muted);margin:12px 0 0}
+#err{color:#d9480f;font-size:.9rem;margin-top:10px;min-height:1.2em}
+.rem{display:grid;gap:12px}
+.ri{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px}
+.ic2{font-size:1.4rem;background:var(--accent);width:42px;height:42px;border-radius:12px;display:grid;place-items:center}
+.ri .tx{flex:1;min-width:150px}.ri .tx b{display:block}.ri .tx small{color:var(--muted)}
+.ri select{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit}
+.sw{position:relative;width:46px;height:26px;flex:none}
+.sw input{opacity:0;width:100%;height:100%;position:absolute;margin:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;background:var(--border);border-radius:999px;transition:.2s}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+i{background:var(--brand)}
+.sw input:checked+i::after{transform:translateX(20px)}
+.rbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.rbar label{font-size:.88rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+#rst{font-size:.88rem;color:var(--muted)}
+#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;z-index:50;max-width:min(340px,calc(100vw - 32px))}
+.toast{background:var(--bg);color:var(--text);border:1px solid var(--brand);border-left-width:5px;border-radius:14px;padding:12px 14px;box-shadow:0 14px 30px -12px rgba(0,0,0,.45);font-size:.92rem;animation:ti .3s ease}
+.toast b{display:block}
+@keyframes ti{from{transform:translateY(12px);opacity:0}}
+@media(max-width:820px){.book{grid-template-columns:1fr}#sum{position:static}}
+@media(max-width:560px){nav a:not(.btn){display:none}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><span>+</span>CarePilot</div>
+  <nav><a href="#features">Features</a><a href="#demo">Try it</a><a href="#book">Book</a><a href="#remind">Reminders</a><a href="#how">How it works</a><a href="#privacy">Privacy</a></nav>
+</header>
+
+<div class="hero">
+  <div>
+    <div class="badge"><i></i>AI health companion, always on</div>
+    <h1>Healthcare guidance that <em>listens first</em></h1>
+    <p>CarePilot helps you understand symptoms, manage medications, and book care—any time, in plain language.</p>
+    <div class="btns"><a class="btn" href="#demo">Try the assistant</a><a class="btn alt" href="#features">Explore features</a></div>
+    <div class="trust"><span>🔒 Encrypted &amp; private</span><span>🌍 30+ languages</span><span>⚡ Replies in seconds</span></div>
+  </div>
+  <div class="vis">
+    <svg class="doc" viewBox="0 0 300 360" role="img" aria-label="Friendly doctor illustration">
+      <circle cx="150" cy="180" r="142" style="fill:var(--accent)"/>
+      <path d="M40 360C40 285 85 252 150 252S260 285 260 360Z" fill="#fff" stroke="#cfe3df" stroke-width="2"/>
+      <path d="M118 254L150 316L182 254Z" fill="#0f9d8a"/>
+      <rect x="134" y="212" width="32" height="46" rx="12" fill="#e0ac86"/>
+      <circle cx="104" cy="176" r="9" fill="#f1c4a0"/><circle cx="196" cy="176" r="9" fill="#f1c4a0"/>
+      <ellipse cx="150" cy="172" rx="46" ry="54" fill="#f1c4a0"/>
+      <path d="M103 168C96 108 134 96 152 96C180 96 204 114 197 168C192 142 176 128 150 128C124 128 108 142 103 168Z" fill="#2b2b3a"/>
+      <circle cx="133" cy="174" r="4" fill="#2b2b3a"/><circle cx="167" cy="174" r="4" fill="#2b2b3a"/>
+      <circle cx="124" cy="190" r="7" fill="#f4a58f" opacity=".5"/><circle cx="176" cy="190" r="7" fill="#f4a58f" opacity=".5"/>
+      <path d="M134 194Q150 210 166 194" stroke="#b3563f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M108 256C96 306 128 326 150 316M192 256C204 306 172 326 150 316" stroke="#475569" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="150" cy="320" r="9" fill="#94a3b8"/>
+      <rect x="192" y="296" width="44" height="26" rx="5" fill="#fff" stroke="#cfe3df" stroke-width="2"/>
+      <path d="M214 301v16M206 309h16" stroke="#e5484d" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <div class="panel pn">
+      <small>Heart rate · Today</small>
+      <div class="bpm">72 <span>bpm</span></div>
+      <svg class="ecg" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0 40H60L72 40L82 12L94 68L104 40H150L162 40L172 20L184 60L194 40H300"/></svg>
+      <div class="bub">Your vitals look steady today. Remember your evening medication at 8:00 PM. 💊</div>
+    </div>
+    <div class="float f1">✅ Appointment booked</div>
+    <div class="float f2">🩺 Dr. Rao · Tue 10:30</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>24/7</b><small>Always available</small></div>
+  <div class="stat"><b>30+</b><small>Languages</small></div>
+  <div class="stat"><b>&lt; 5 sec</b><small>Average reply</small></div>
+  <div class="stat"><b>End-to-end</b><small>Encrypted data</small></div>
+</div>
+
+<section id="features">
+  <h2>Everything you need to stay on top of your health</h2>
+  <p class="sub">One assistant for questions, reminders, and next steps.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">🩺</div><h3>Symptom check</h3><p>Describe how you feel and get clear guidance on urgency and sensible next steps.</p></div>
+    <div class="card"><div class="ic">💊</div><h3>Medication reminders</h3><p>Never miss a dose, with refill alerts and interaction awareness.</p></div>
+    <div class="card"><div class="ic">📅</div><h3>Appointment booking</h3><p>Find a clinician, pick a slot, and get reminders and prep notes.</p></div>
+    <div class="card"><div class="ic">📈</div><h3>Health tracking</h3><p>Log vitals like blood pressure, glucose, and sleep and spot trends early.</p></div>
+    <div class="card"><div class="ic">📄</div><h3>Report explainer</h3><p>Turn lab results and discharge notes into simple, understandable summaries.</p></div>
+    <div class="card"><div class="ic">👨‍👩‍👧</div><h3>Family profiles</h3><p>Manage care for parents, kids, and loved ones from a single account.</p></div>
+  </div>
+</section>
+
+<section id="demo">
+  <h2>Try the assistant</h2>
+  <p class="sub">A simplified demo. Tap a suggestion or type a symptom such as “headache”, “fever”, or “cough”.</p>
+  <div class="chat">
+    <div class="chat-h">CarePilot Assistant</div>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <div class="chips" id="chips"></div>
+    <div class="inp"><input id="in" type="text" placeholder="Describe how you feel…" aria-label="Message"><button class="btn" id="send">Send</button></div>
+  </div>
+  <p class="sub" style="text-align:center;margin-top:14px;font-size:.85rem">Demo responses are pre-written examples, not medical advice.</p>
+</section>
+
+<section id="book">
+  <h2>Book an appointment</h2>
+  <p class="sub">Choose a specialty, doctor, and time. Confirmation takes less than a minute.</p>
+  <div class="book">
+    <div class="card">
+      <div class="row2">
+        <label>Specialty<select id="spec"></select></label>
+        <label>Doctor<select id="doc"></select></label>
+      </div>
+      <label>Date<input type="date" id="dt"></label>
+      <div class="lbl">Available times</div>
+      <div class="slots" id="slots"></div>
+      <div class="row2">
+        <label>Full name<input id="nm" type="text" autocomplete="name"></label>
+        <label>Phone<input id="ph" type="tel" autocomplete="tel"></label>
+      </div>
+      <label>Reason for visit (optional)<textarea id="rs" rows="2"></textarea></label>
+      <button class="btn" id="bk" type="button">Confirm appointment</button>
+      <div id="err" role="alert"></div>
+    </div>
+    <div class="card" id="sum"></div>
+  </div>
+</section>
+
+<section id="remind">
+  <h2>Smart health reminders</h2>
+  <p class="sub">Gentle nudges for medicines, water, appointments, and checkups, on the schedule each patient chooses.</p>
+  <div class="rem" id="rl"></div>
+  <div class="rbar">
+    <button class="btn" id="perm" type="button">Enable device notifications</button>
+    <button class="btn alt" id="test" type="button">Send test notification</button>
+    <label><input type="checkbox" id="demo"> Demo speed (every 15 sec)</label>
+  </div>
+  <div id="rst"></div>
+  <div class="notice" style="margin-top:14px"><b>Note:</b> In this demo, reminders appear while this page is open. In the full product, CarePilot would send push, SMS, WhatsApp, or email reminders even when the app is closed.</div>
+  <div id="toasts" aria-live="polite"></div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p class="sub">Simple, safe, and designed around you.</p>
+  <div class="steps">
+    <div class="step"><h3>Tell us what’s going on</h3><p>Chat by text or voice about symptoms, medications, or questions.</p></div>
+    <div class="step"><h3>Get clear guidance</h3><p>Receive plain-language answers, with urgent warning signs flagged right away.</p></div>
+    <div class="step"><h3>Take the next step</h3><p>Book a visit, set reminders, or share a summary with your doctor.</p></div>
+  </div>
+</section>
+
+<section id="privacy">
+  <h2>Privacy and safety first</h2>
+  <p class="sub">Your health data stays yours.</p>
+  <div class="grid" style="margin-bottom:18px">
+    <div class="card"><div class="ic">🔒</div><h3>Encrypted</h3><p>Data is encrypted in transit and at rest.</p></div>
+    <div class="card"><div class="ic">✅</div><h3>You’re in control</h3><p>Export or delete your data whenever you like.</p></div>
+    <div class="card"><div class="ic">🚨</div><h3>Emergency aware</h3><p>Red-flag symptoms prompt you to call emergency services immediately.</p></div>
+  </div>
+  <div class="notice"><b>Important:</b> CarePilot provides general information and is not a substitute for professional medical advice, diagnosis, or treatment. In an emergency, call your local emergency number right away.</div>
+</section>
+
+<section>
+  <div class="cta"><h2>Take care of your health, effortlessly</h2><p>Join the waitlist for early access.</p><a class="btn" href="#demo">Get started</a></div>
+</section>
+
+<footer>© 2026 CarePilot. All rights reserved.</footer>
+</div>
+
+<script>
+var msgs=document.getElementById('msgs'),inp=document.getElementById('in'),chips=document.getElementById('chips');
+var topics={
+headache:"Headaches are often linked to dehydration, stress, poor sleep, or eye strain. Try resting in a quiet room, drinking water, and taking a break from screens. Seek urgent care if it’s sudden and severe, or comes with confusion, a stiff neck, vision changes, or weakness.",
+fever:"For a mild fever, rest, drink plenty of fluids, and monitor your temperature. Contact a clinician if it’s above 39.4 °C (103 °F), lasts more than 3 days, or comes with a rash, trouble breathing, or severe pain.",
+cough:"Most coughs from colds clear up within 2–3 weeks. Warm fluids and honey can soothe throat irritation. See a doctor if you have shortness of breath, chest pain, blood in your cough, or it lasts longer than 3 weeks.",
+sleep:"For better sleep, keep a consistent schedule, limit caffeine after noon, dim screens an hour before bed, and keep your room cool and dark. If trouble sleeping lasts for weeks, talk to a clinician.",
+chest:"Chest pain can be serious. If you have pressure or pain with shortness of breath, sweating, or pain spreading to your arm or jaw, call your local emergency number now."
+};
+var fallback="Thanks for sharing. I can give general guidance on symptoms like headache, fever, cough, or sleep. Could you tell me more about what you’re experiencing and for how long?";
+function add(t,c){var d=document.createElement('div');d.className='m '+c;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function reply(q){
+  var l=q.toLowerCase(),a=fallback;
+  for(var k in topics){if(l.indexOf(k)>-1){a=topics[k];break}}
+  if(l.indexOf('pain')>-1&&l.indexOf('chest')>-1)a=topics.chest;
+  setTimeout(function(){add(a,'bot')},500);
+}
+function send(t){t=(t||inp.value).trim();if(!t)return;add(t,'me');inp.value='';reply(t)}
+document.getElementById('send').onclick=function(){send()};
+inp.onkeydown=function(e){if(e.key==='Enter')send()};
+['I have a headache','I have a fever','Persistent cough','Trouble sleeping'].forEach(function(s){
+  var b=document.createElement('button');b.className='chip';b.textContent=s;b.onclick=function(){send(s)};chips.appendChild(b)});
+add("Hi, I’m CarePilot. How are you feeling today?",'bot');
+var $=function(i){return document.getElementById(i)};
+var DOCS={'General Physician':['Dr. Anita Rao','Dr. Sameer Joshi'],'Cardiology':['Dr. Vikram Mehta','Dr. Neha Kulkarni'],'Dermatology':['Dr. Priya Nair'],'Pediatrics':['Dr. Rahul Deshmukh','Dr. Kavita Iyer'],'Mental Health':['Dr. Arjun Sen']};
+var TIMES=['09:00 AM','10:30 AM','12:00 PM','02:30 PM','04:00 PM','05:30 PM'];
+var spec=$('spec'),doc=$('doc'),dt=$('dt'),slots=$('slots'),sel=null;
+function pad(n){return n<10?'0'+n:''+n}
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function fmt(){return dt.value?new Date(dt.value+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'}):'Select a date'}
+function seed(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0}return Math.abs(h)}
+function line(p,k,v){var d=document.createElement('div');d.className='ln';var a=document.createElement('span');a.textContent=k;var b=document.createElement('b');b.textContent=v;d.appendChild(a);d.appendChild(b);p.appendChild(d)}
+function upd(done,ref){var s=$('sum');s.innerHTML='';var h=document.createElement('h3');h.textContent=done?'Appointment confirmed ✅':'Your summary';s.appendChild(h);line(s,'Doctor',doc.value);line(s,'Specialty',spec.value);line(s,'Date',fmt());line(s,'Time',sel||'Select a time');if(done){line(s,'Patient',$('nm').value.trim());line(s,'Reference',ref);var p=document.createElement('p');p.className='note';p.textContent='A reminder would be sent before your visit. This is a demo, so no real booking is made.';s.appendChild(p)}}
+function renderSlots(){slots.innerHTML='';sel=null;var base=seed(doc.value+dt.value);TIMES.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.className='slot';b.textContent=t;if((base+i*7)%4===0){b.disabled=true}else{b.onclick=function(){sel=t;[].forEach.call(slots.children,function(x){x.classList.remove('on')});b.classList.add('on');upd()}}slots.appendChild(b)});upd()}
+function fillDocs(){doc.innerHTML='';DOCS[spec.value].forEach(function(n){var o=document.createElement('option');o.textContent=n;doc.appendChild(o)});renderSlots()}
+Object.keys(DOCS).forEach(function(k){var o=document.createElement('option');o.textContent=k;spec.appendChild(o)});
+var t0=new Date();dt.min=iso(t0);t0.setDate(t0.getDate()+1);dt.value=iso(t0);
+spec.onchange=fillDocs;doc.onchange=renderSlots;dt.onchange=renderSlots;
+$('bk').onclick=function(){var e=$('err');if(!dt.value){e.textContent='Please choose a date.';return}if(!sel){e.textContent='Please select an available time.';return}if(!$('nm').value.trim()){e.textContent='Please enter your name.';return}e.textContent='';upd(true,'CP-'+(1000+Math.floor(Math.random()*9000)));toast('Appointment reminder set','We will remind you before your visit with '+doc.value+'.')};
+fillDocs();
+
+var REM=[
+{id:'med',ic:'💊',t:'Medicine',d:'Take your medicines on time',m:['Time for your medicine 💊. Take it as prescribed.','Medicine reminder: please do not skip your dose.']},
+{id:'water',ic:'💧',t:'Water',d:'Stay hydrated through the day',m:['Time for a glass of water 💧.','Hydration check: have you had water recently?']},
+{id:'appt',ic:'📅',t:'Appointments',d:'Get reminded before your visits',m:['You have an upcoming appointment. Keep your reports ready.','Reminder: check your appointment time today.']},
+{id:'walk',ic:'🚶',t:'Activity',d:'A short walk or stretch break',m:['Stand up and stretch for 2 minutes 🚶.','Time for a short walk. Your heart will thank you.']},
+{id:'chk',ic:'🩺',t:'Health check',d:'Log blood pressure, sugar, or weight',m:['Log your vitals for today 🩺.','Time to record your blood pressure or sugar reading.']}
+];
+var FREQ=[['Every 30 min',1800],['Every hour',3600],['Every 4 hours',14400],['Daily',86400]];
+var prefs={},timers={};
+try{prefs=JSON.parse(localStorage.getItem('cp_rem')||'{}')||{}}catch(e){prefs={}}
+function save(){try{localStorage.setItem('cp_rem',JSON.stringify(prefs))}catch(e){}}
+function toast(t,m){var d=document.createElement('div');d.className='toast';var b=document.createElement('b');b.textContent=t;var s=document.createElement('span');s.textContent=m;d.appendChild(b);d.appendChild(s);$('toasts').appendChild(d);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},8000)}
+function notify(r){var m=r.m[Math.floor(Math.random()*r.m.length)];toast(r.t+' reminder',m);try{if('Notification' in window&&Notification.permission==='granted'){new Notification('CarePilot: '+r.t,{body:m})}}catch(e){}}
+function sched(r){clearInterval(timers[r.id]);if(prefs[r.id].on){var s=$('demo').checked?15:prefs[r.id].f;timers[r.id]=setInterval(function(){notify(r)},s*1000)}}
+REM.forEach(function(r){
+  if(!prefs[r.id])prefs[r.id]={on:false,f:3600};
+  var row=document.createElement('div');row.className='ri';
+  var ic=document.createElement('div');ic.className='ic2';ic.textContent=r.ic;
+  var tx=document.createElement('div');tx.className='tx';var b=document.createElement('b');b.textContent=r.t;var sm=document.createElement('small');sm.textContent=r.d;tx.appendChild(b);tx.appendChild(sm);
+  var sel2=document.createElement('select');sel2.setAttribute('aria-label',r.t+' frequency');FREQ.forEach(function(f){var o=document.createElement('option');o.value=f[1];o.textContent=f[0];if(f[1]===prefs[r.id].f)o.selected=true;sel2.appendChild(o)});
+  var sw=document.createElement('label');sw.className='sw';var cb=document.createElement('input');cb.type='checkbox';cb.checked=prefs[r.id].on;cb.setAttribute('aria-label','Enable '+r.t+' reminders');var kn=document.createElement('i');sw.appendChild(cb);sw.appendChild(kn);
+  cb.onchange=function(){prefs[r.id].on=cb.checked;save();sched(r);if(cb.checked)toast(r.t+' reminders on','You will be reminded '+sel2.options[sel2.selectedIndex].text.toLowerCase()+'.')};
+  sel2.onchange=function(){prefs[r.id].f=+sel2.value;save();sched(r)};
+  row.appendChild(ic);row.appendChild(tx);row.appendChild(sel2);row.appendChild(sw);$('rl').appendChild(row);sched(r);
+});
+$('demo').onchange=function(){REM.forEach(sched)};
+$('test').onclick=function(){notify(REM[0])};
+$('perm').onclick=function(){var st=$('rst');try{if(!('Notification' in window)){st.textContent='This browser does not support device notifications. In-page reminders will still appear.';return}Notification.requestPermission().then(function(p){st.textContent=p==='granted'?'Device notifications enabled.':'Device notifications are blocked here. In-page reminders will still appear.'})}catch(e){st.textContent='Device notifications are unavailable here. In-page reminders will still appear.'}};
+</script>
+</body>
+</html>
